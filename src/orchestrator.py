@@ -1,4 +1,5 @@
 from src.core.repo_cloner import RepoCloner
+from src.core.repo_analyzer import RepoAnalyzer
 
 
 class Orchestrator:
@@ -6,6 +7,7 @@ class Orchestrator:
         """Orchestrates the cloning and updating of repositories."""
         self.logger = logger
         self.repo_cloner = RepoCloner(logger)
+        self.repo_analyzer = RepoAnalyzer(logger)
 
     def processing_repo(self, url_repo: str, token: str = None, username: str = None):
         """
@@ -28,6 +30,11 @@ class Orchestrator:
             self.logger.info(
                 "Repository name: %s, Origin: %s", repo_name, cloned_repo_path
             )
+
+            output_json_path = self.repo_analyzer.analyze_and_export(
+                cloned_repo_path, repo_name
+            )
+            self.logger.info("Structure exported to: %s", output_json_path)
 
         except ValueError as ve:
             self.logger.error("Invalid URL or malformed parameter: %s", ve)
