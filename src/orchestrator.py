@@ -1,5 +1,6 @@
 from src.core.repo_cloner import RepoCloner
 from src.core.repo_analyzer import RepoAnalyzer
+from src.llm.factory_provider import ProviderFactory
 
 
 class Orchestrator:
@@ -8,6 +9,7 @@ class Orchestrator:
         self.logger = logger
         self.repo_cloner = RepoCloner(logger)
         self.repo_analyzer = RepoAnalyzer(logger)
+        self.provider_factory = ProviderFactory(logger)
 
     def processing_repo(self, url_repo: str, token: str = None, username: str = None):
         """
@@ -35,6 +37,11 @@ class Orchestrator:
                 cloned_repo_path, repo_name
             )
             self.logger.info("Structure exported to: %s", output_json_path)
+
+            provider = self.provider_factory.llm_provider
+            response = provider.generate_text("Tell me a joke")
+            print(response)
+            self.logger.info("Text generation completed successfully.")
 
         except ValueError as ve:
             self.logger.error("Invalid URL or malformed parameter: %s", ve)

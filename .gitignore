@@ -5,6 +5,7 @@ logs/
 
 
 data/*
+test/
 
 !data/docs/
 !data/repo/
